@@ -276,7 +276,7 @@
     "restore": "Restore",
     "note": "Note",
     "emptyPending": "No companions waiting",
-    "manageUsers": "Manage users",
+    "manageUsers": "Members",
     "manageTrips": "Manage trips",
     "log": "Admin activity log",
     "logHint": "Every admin action, last 100 entries",
@@ -316,8 +316,8 @@
       "change_role": "changed the role of {name}",
       "cancel_trip": "cancelled a trip"
     },
-    "usersPageHint": "Search by name, filter by role or state, act right on the card",
-    "searchUsers": "Search by name",
+    "usersPageHint": "Everyone on the platform. Search by name, email or phone, then approve, suspend or change their role right on the card.",
+    "searchUsers": "Search name, email or phone",
     "search": "Search",
     "allRoles": "All roles",
     "allStates": "All states",
@@ -349,7 +349,12 @@
     "emptyTrips": "No trips match these filters",
     "noCompanion": "none yet",
     "forceCancel": "Cancel trip",
-    "cancelReason": "Reason for cancelling (not shown to users)"
+    "cancelReason": "Reason for cancelling (not shown to users)",
+    "members": "All members",
+    "lastSeen": "last seen {time}",
+    "neverSignedIn": "never signed in",
+    "jobsTaken": "{n} jobs taken",
+    "requestsMade": "{n} requests created"
   },
   "empty": {
     "retry": "Try again",

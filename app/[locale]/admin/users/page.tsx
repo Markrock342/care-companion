@@ -1,5 +1,5 @@
 import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
-import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
+import { Briefcase, Envelope, MagnifyingGlass, Phone, SignIn, Star } from "@phosphor-icons/react/dist/ssr";
 import { redirect, Link } from "@/i18n/navigation";
 import { SiteFooter, SiteHeader } from "@/components/layout/site-header";
 import { StatusPill } from "@/components/ui/status-pill";
@@ -9,12 +9,33 @@ import { AdminUserActions } from "@/components/admin/user-actions";
 import { FilterChips } from "@/components/admin/filter-chips";
 import { requireProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { formatDate } from "@/lib/format";
+import { formatDate, formatDateTime } from "@/lib/format";
 import { provinceName } from "@/lib/provinces";
-import type { Profile, UserRole } from "@/lib/types";
+import type { UserRole } from "@/lib/types";
 
 const ROLES: (UserRole | "")[] = ["", "customer", "companion", "admin"];
 const STATES = ["", "pending", "approved", "rejected", "suspended"] as const;
+
+/** One row of admin_list_users: profile plus the sign-in data from auth.users. */
+type MemberRow = {
+  id: string;
+  email: string;
+  full_name: string;
+  phone: string | null;
+  avatar_url: string | null;
+  role: UserRole;
+  verification_status: string;
+  verification_note: string | null;
+  account_status: string;
+  service_provinces: string[];
+  experience_years: number | null;
+  bio: string | null;
+  created_at: string;
+  last_sign_in_at: string | null;
+  trips_as_customer: number;
+  trips_as_companion: number;
+  avg_rating: number | null;
+};
 
 export default async function AdminUsersPage({
   params,
@@ -37,15 +58,14 @@ export default async function AdminUsersPage({
   const search = (query.q ?? "").trim();
 
   const supabase = await createClient();
-  let request = supabase.from("profiles").select("*").order("created_at", { ascending: false }).limit(200);
-  if (role) request = request.eq("role", role);
-  if (state === "suspended") request = request.eq("account_status", "suspended");
-  else if (state) request = request.eq("verification_status", state);
-  if (search) request = request.ilike("full_name", `%${search}%`);
-
-  const { data } = await request;
-  const users = (data ?? []) as Profile[];
-  const params_ = { role, verification: state, q: search };
+  const { data } = await supabase.rpc("admin_list_users", {
+    p_role: role || null,
+    p_state: state || null,
+    p_search: search || null,
+    p_limit: 200,
+  });
+  const members = (data ?? []) as MemberRow[];
+  const filters = { role, verification: state, q: search };
 
   return (
     <>
@@ -54,7 +74,7 @@ export default async function AdminUsersPage({
         <Link href="/admin" className="text-sm font-semibold text-flame">
           ← {t("title")}
         </Link>
-        <h1 className="mt-2 font-display text-3xl sm:text-4xl">{t("users")}</h1>
+        <h1 className="mt-2 font-display text-3xl sm:text-4xl">{t("members")}</h1>
         <p className="mt-1 text-sm text-ink-soft">{t("usersPageHint")}</p>
 
         <form action="" className="mt-5 flex gap-2">
@@ -81,7 +101,7 @@ export default async function AdminUsersPage({
             basePath="/admin/users"
             param="role"
             current={role}
-            params={params_}
+            params={filters}
             options={[
               { value: "", label: t("allRoles") },
               { value: "customer", label: tr("customer") },
@@ -93,7 +113,7 @@ export default async function AdminUsersPage({
             basePath="/admin/users"
             param="verification"
             current={state}
-            params={params_}
+            params={filters}
             options={[
               { value: "", label: t("allStates") },
               { value: "pending", label: t("statePending") },
@@ -104,48 +124,82 @@ export default async function AdminUsersPage({
           />
         </div>
 
-        <p className="mt-4 text-sm text-ink-soft">{t("found", { n: users.length })}</p>
+        <p className="mt-4 text-sm text-ink-soft">{t("found", { n: members.length })}</p>
 
-        {users.length === 0 ? (
+        {members.length === 0 ? (
           <div className="mt-4">
             <EmptyState title={t("emptyUsers")} />
           </div>
         ) : (
           <ul className="mt-4 grid gap-3">
-            {users.map((item) => (
-              <li key={item.id} className="rounded-[24px] bg-paper p-4 shadow-[var(--shadowRaise)]">
+            {members.map((member) => (
+              <li key={member.id} className="rounded-[24px] bg-paper p-4 shadow-[var(--shadowRaise)]">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div className="flex min-w-0 items-start gap-3">
-                    <Avatar name={item.full_name || "?"} src={item.avatar_url} className="size-12 text-sm" />
+                    <Avatar name={member.full_name || "?"} src={member.avatar_url} className="size-12 text-sm" />
                     <div className="min-w-0">
                       <p className="font-display text-xl">
-                        {item.full_name || item.id.slice(0, 8)}
-                        {item.id === user.id ? <span className="ml-2 text-sm text-ink-soft">({t("you")})</span> : null}
+                        {member.full_name || member.email}
+                        {member.id === user.id ? <span className="ml-2 text-sm text-ink-soft">({t("you")})</span> : null}
                       </p>
-                      <p className="text-sm text-ink-soft">
-                        {tr(item.role)} · {t("joined", { date: formatDate(item.created_at.slice(0, 10), loc) })}
-                        {item.phone ? ` · ${item.phone}` : ""}
+
+                      <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-soft">
+                        <span className="flex items-center gap-1">
+                          <Envelope className="size-4" aria-hidden />
+                          {member.email}
+                        </span>
+                        {member.phone ? (
+                          <span className="flex items-center gap-1">
+                            <Phone className="size-4" aria-hidden />
+                            {member.phone}
+                          </span>
+                        ) : null}
                       </p>
-                      {item.role === "companion" ? (
-                        <p className="text-sm text-ink-soft">
-                          {item.service_provinces.map((id) => provinceName(id, loc)).join(", ") || t("noArea")}
-                        </p>
+
+                      <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-soft">
+                        <span>{tr(member.role)}</span>
+                        <span>· {t("joined", { date: formatDate(member.created_at.slice(0, 10), loc) })}</span>
+                        <span className="flex items-center gap-1">
+                          <SignIn className="size-4" aria-hidden />
+                          {member.last_sign_in_at ? t("lastSeen", { time: formatDateTime(member.last_sign_in_at, loc) }) : t("neverSignedIn")}
+                        </span>
+                      </p>
+
+                      <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-soft">
+                        <span className="flex items-center gap-1">
+                          <Briefcase className="size-4" aria-hidden />
+                          {member.role === "companion"
+                            ? t("jobsTaken", { n: Number(member.trips_as_companion) })
+                            : t("requestsMade", { n: Number(member.trips_as_customer) })}
+                        </span>
+                        {member.avg_rating ? (
+                          <span className="flex items-center gap-1">
+                            <Star weight="fill" className="size-4 text-gold" aria-hidden />
+                            {Number(member.avg_rating).toFixed(2)}
+                          </span>
+                        ) : null}
+                        {member.role === "companion" && member.service_provinces.length ? (
+                          <span>{member.service_provinces.map((id) => provinceName(id, loc)).join(", ")}</span>
+                        ) : null}
+                      </p>
+
+                      {member.verification_note ? (
+                        <p className="mt-1 text-sm text-danger">“{member.verification_note}”</p>
                       ) : null}
-                      {item.verification_note ? (
-                        <p className="mt-1 text-sm text-danger">“{item.verification_note}”</p>
-                      ) : null}
+
                       <div className="mt-2 flex flex-wrap gap-2">
-                        <StatusPill value={item.account_status} />
-                        {item.role === "companion" ? <StatusPill value={item.verification_status} /> : null}
+                        <StatusPill value={member.account_status} />
+                        {member.role === "companion" ? <StatusPill value={member.verification_status} /> : null}
                       </div>
                     </div>
                   </div>
+
                   <AdminUserActions
-                    userId={item.id}
-                    role={item.role}
-                    verification={item.verification_status}
-                    suspended={item.account_status === "suspended"}
-                    isSelf={item.id === user.id}
+                    userId={member.id}
+                    role={member.role}
+                    verification={member.verification_status}
+                    suspended={member.account_status === "suspended"}
+                    isSelf={member.id === user.id}
                   />
                 </div>
               </li>
