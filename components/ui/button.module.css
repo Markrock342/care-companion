@@ -1,0 +1,140 @@
+.root {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  border: 0;
+  border-radius: var(--radiusPill);
+  font-family: inherit;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform var(--durationFast) var(--easeOut),
+    box-shadow var(--durationFast) var(--easeOut),
+    background-color var(--durationFast) var(--easeOut);
+}
+
+.root:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.md {
+  height: 3rem;
+  padding-inline: 1.25rem;
+  font-size: var(--sizeText);
+}
+
+.sm {
+  height: 2.5rem;
+  padding-inline: 0.75rem;
+  font-size: var(--sizeTextSm);
+}
+
+.lg {
+  height: 3.5rem;
+  padding-inline: 1.5rem;
+  font-size: 1.125rem;
+}
+
+.primary {
+  background: var(--colorFlame);
+  color: var(--colorOnAccent);
+  box-shadow: 0 4px 0 var(--colorFlameHot);
+}
+
+.primary:hover,
+.primary:focus-visible {
+  background: var(--colorFlameHot);
+  transform: translateY(1px);
+  box-shadow: 0 3px 0 color-mix(in oklch, var(--colorFlameHot) 80%, var(--colorInk));
+}
+
+.primary:active:not(:disabled) {
+  transform: translateY(4px);
+  box-shadow: none;
+}
+
+.secondary {
+  background: var(--colorPlate);
+  color: var(--colorOnAccent);
+  box-shadow: 0 4px 0 #050506;
+}
+
+.secondary:hover,
+.secondary:focus-visible {
+  background: color-mix(in oklch, var(--colorPlate) 78%, var(--colorOnAccent));
+  transform: translateY(1px);
+}
+
+.secondary:active:not(:disabled) {
+  transform: translateY(4px);
+  box-shadow: none;
+}
+
+.ghost {
+  background: transparent;
+  color: var(--colorInk);
+  /* Inset outline so the pill reads as a button without changing its size. */
+  box-shadow: inset 0 0 0 1.5px color-mix(in oklch, var(--colorInk) 22%, transparent);
+}
+
+.ghost:hover,
+.ghost:focus-visible {
+  background: var(--colorMist);
+  box-shadow: inset 0 0 0 1.5px var(--colorFlame);
+  color: var(--colorFlame);
+}
+
+.ghost:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.danger {
+  background: var(--colorDanger);
+  color: var(--colorOnAccent);
+}
+
+.danger:hover,
+.danger:focus-visible {
+  filter: brightness(1.08);
+}
+
+.danger:active:not(:disabled) {
+  transform: translateY(2px);
+}
+
+.plate {
+  background: var(--colorGold);
+  color: var(--colorInk);
+  box-shadow: 0 4px 0 #c9a010;
+}
+
+.plate:hover,
+.plate:focus-visible {
+  transform: translateY(1px);
+  box-shadow: 0 3px 0 #b48f0c;
+}
+
+.plate:active:not(:disabled) {
+  transform: translateY(4px);
+  box-shadow: none;
+}
+
+.spinner {
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

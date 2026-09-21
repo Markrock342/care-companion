@@ -1,0 +1,50 @@
+/* From Uiverse.io by kennyotsu (wise-rattlesnake-92) — remixed to Care Companion danger. MIT. */
+
+.root {
+  width: 100%;
+  font-size: var(--sizeTextSm);
+  line-height: 1.4;
+}
+
+.alert {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: color-mix(in oklch, var(--colorDanger) 12%, var(--colorPaper));
+}
+
+.iconWrap {
+  flex-shrink: 0;
+}
+
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--colorDanger);
+}
+
+.body {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.heading {
+  margin: 0;
+  color: var(--colorDanger);
+  font-size: var(--sizeTextSm);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.list {
+  margin: 0.35rem 0 0;
+  padding-left: 1.15rem;
+  color: color-mix(in oklch, var(--colorDanger) 82%, var(--colorInk));
+  list-style-type: disc;
+}
+
+.list > li + li {
+  margin-top: 0.15rem;
+}

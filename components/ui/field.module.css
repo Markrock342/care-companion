@@ -1,0 +1,72 @@
+.root {
+  display: grid;
+  gap: 6px;
+}
+
+.label {
+  font-weight: 600;
+  color: var(--colorInk);
+}
+
+.required {
+  color: var(--colorFlame);
+}
+
+.hint,
+.error {
+  font-size: var(--sizeTextSm);
+}
+
+.hint {
+  color: var(--colorInkSoft);
+}
+
+.error {
+  color: var(--colorDanger);
+}
+
+.control {
+  width: 100%;
+  height: 3rem;
+  padding-inline: var(--space-md);
+  border: 0;
+  border-radius: 1rem;
+  background: var(--colorPaper);
+  color: var(--colorInk);
+  font: inherit;
+  font-size: var(--sizeText);
+  box-shadow: inset 0 0 0 1.5px var(--colorLine);
+  cursor: pointer;
+}
+
+.control::placeholder {
+  color: color-mix(in oklch, var(--colorInkSoft) 70%, var(--colorPaper));
+}
+
+.area {
+  height: 7rem;
+  padding-block: var(--space-sm);
+  resize: vertical;
+  cursor: text;
+}
+
+.control:hover,
+.control:focus,
+.control:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--colorFlame);
+}
+
+.control:focus,
+.control:focus-visible {
+  outline: 3px solid var(--colorFlame);
+  outline-offset: 2px;
+}
+
+.control:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.tall {
+  height: 10rem;
+}

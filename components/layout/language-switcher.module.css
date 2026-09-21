@@ -1,0 +1,34 @@
+.root {
+  display: inline-flex;
+  padding: 4px;
+  border-radius: var(--radiusPill);
+  background: var(--colorMist);
+}
+
+.option {
+  min-width: 2.75rem;
+  padding: 0.375rem 0.75rem;
+  border: 0;
+  border-radius: var(--radiusPill);
+  background: transparent;
+  color: var(--colorInkSoft);
+  font: inherit;
+  font-size: var(--sizeTextSm);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.option:hover,
+.option:focus-visible {
+  background: color-mix(in oklch, var(--colorInk) 8%, var(--colorMist));
+}
+
+.option:disabled {
+  cursor: default;
+}
+
+.selected,
+.selected:hover {
+  background: var(--colorInk);
+  color: var(--colorPaper);
+}

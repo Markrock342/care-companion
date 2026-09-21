@@ -1,0 +1,95 @@
+/* From Uiverse.io sun toggle (checkbox + ☼) — remixed to Care Companion gold. MIT. */
+
+.root {
+  --sizeToggle: 2.75rem;
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: var(--sizeToggle);
+  height: var(--sizeToggle);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--colorInk);
+}
+
+.toggle {
+  position: relative;
+  width: var(--sizeToggle);
+  height: var(--sizeToggle);
+}
+
+.input {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.button {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--colorGold);
+  box-shadow:
+    0 3px 0 color-mix(in oklch, var(--colorGold) 55%, var(--colorInk)),
+    0 0 0 6px color-mix(in oklch, var(--colorGold) 35%, transparent) inset;
+  transition:
+    background-color var(--durationMed) var(--easeOut),
+    box-shadow var(--durationMed) var(--easeOut),
+    transform var(--durationFast) var(--easeOut);
+}
+
+.label {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 1px 0 rgb(20 22 28 / 0.2);
+  pointer-events: none;
+}
+
+.input:hover + .button,
+.input:focus-visible + .button {
+  transform: translateY(1px);
+}
+
+.input:active + .button {
+  transform: translateY(2px);
+  box-shadow:
+    0 1px 0 color-mix(in oklch, var(--colorGold) 55%, var(--colorInk)),
+    0 0 0 6px color-mix(in oklch, var(--colorGold) 35%, transparent) inset;
+}
+
+.input:checked + .button {
+  background: var(--colorPlate);
+  box-shadow:
+    0 3px 0 #050506,
+    0 0 0 6px color-mix(in oklch, var(--colorGold) 22%, transparent) inset;
+}
+
+.input:checked ~ .label {
+  color: var(--colorGold);
+  text-shadow: 0 0 8px color-mix(in oklch, var(--colorGold) 55%, transparent);
+}
+
+.input:checked:hover + .button,
+.input:checked:focus-visible + .button {
+  transform: translateY(1px);
+}
+
+.input:disabled {
+  cursor: default;
+}
+
+.input:disabled + .button {
+  opacity: 0.5;
+}

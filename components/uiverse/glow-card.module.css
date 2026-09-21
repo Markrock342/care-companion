@@ -1,0 +1,41 @@
+/* From Uiverse.io card glow pattern (community MIT) — remixed to Care Companion tokens. */
+
+.root {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: var(--radiusCard);
+  background: var(--colorPlate);
+  color: var(--colorOnAccent);
+  padding: var(--space-lg);
+  box-shadow: var(--shadowPlate);
+}
+
+.root::before {
+  position: absolute;
+  inset: -40% auto auto -20%;
+  width: 8rem;
+  height: 8rem;
+  border-radius: 50%;
+  background: color-mix(in oklch, var(--colorFlame) 55%, transparent);
+  filter: blur(18px);
+  content: "";
+  pointer-events: none;
+  z-index: -1;
+}
+
+.value {
+  font-family: var(--font-display), "Chakra Petch", sans-serif;
+  font-size: clamp(2.25rem, 5vw, 3.25rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.label {
+  margin-top: var(--space-sm);
+  color: color-mix(in oklch, var(--colorOnAccent) 78%, var(--colorFlame));
+  font-size: var(--sizeTextSm);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}

@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local screenshots
+/output
+
+# macOS metadata files on external drives
+._*
+
+# local browser-testing output
+/.playwright-cli
+
+# keep the env template
+!.env.example

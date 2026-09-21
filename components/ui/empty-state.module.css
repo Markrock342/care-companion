@@ -1,0 +1,51 @@
+.root {
+  display: grid;
+  place-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-2xl) var(--space-lg);
+  border-radius: var(--radiusCard);
+  background: var(--colorMist);
+  text-align: center;
+}
+
+.mark {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--colorFlame);
+  font-family: var(--font-display), "Chakra Petch", sans-serif;
+  font-weight: 700;
+}
+
+.dot {
+  display: grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--colorInk);
+  color: var(--colorPaper);
+  font-size: var(--sizeTextSm);
+}
+
+.line {
+  width: 2.5rem;
+  height: 2px;
+  transform-origin: left center;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--colorFlame) 0 6px,
+    transparent 6px 10px
+  );
+  animation: grow-x 640ms var(--easeOut) 200ms both;
+}
+
+.title {
+  font-family: var(--font-display), "Chakra Petch", sans-serif;
+  font-size: var(--sizeH3);
+}
+
+.hint {
+  max-width: 36rem;
+  color: var(--colorInkSoft);
+}

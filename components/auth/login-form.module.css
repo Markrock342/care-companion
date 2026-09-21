@@ -1,0 +1,270 @@
+/* From Uiverse.io by JohnnyCSilva (bad-cheetah-74) — remixed to Care Companion tokens. MIT. */
+
+.root {
+  display: flex;
+  width: min(100%, 28.125rem);
+  flex-direction: column;
+  gap: 10px;
+  padding: 30px;
+  border-radius: 20px;
+  background: var(--colorMist);
+  box-shadow: var(--shadowRaise);
+  color: var(--colorInk);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field > label {
+  color: var(--colorInk);
+  font-weight: 600;
+}
+
+.inputRow {
+  display: flex;
+  height: 50px;
+  align-items: center;
+  padding-left: 10px;
+  border: 1.5px solid var(--colorLine);
+  border-radius: 10px;
+  background: var(--colorPaper);
+  color: var(--colorInkSoft);
+  transition: border-color var(--durationFast) var(--easeOut);
+}
+
+.inputRow svg {
+  flex-shrink: 0;
+  fill: currentColor;
+}
+
+.input {
+  width: 100%;
+  height: 100%;
+  margin-left: 10px;
+  padding-right: 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--colorInk);
+  font: inherit;
+}
+
+.input::placeholder {
+  color: var(--colorInkSoft);
+}
+
+.input:focus {
+  outline: none;
+}
+
+.inputRow:focus-within {
+  border-color: var(--colorFlame);
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: var(--colorInk);
+  font-size: var(--sizeTextSm);
+  font-weight: 400;
+}
+
+.remember input {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--colorFlame);
+  cursor: pointer;
+}
+
+.link {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--colorFlame);
+  font: inherit;
+  font-size: var(--sizeTextSm);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.link:hover,
+.link:focus-visible {
+  text-decoration: underline;
+}
+
+.link:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.submit {
+  width: 100%;
+  height: 50px;
+  margin: 10px 0 4px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--colorPlate);
+  color: var(--colorOnAccent);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color var(--durationFast) var(--easeOut),
+    transform var(--durationFast) var(--easeOut);
+}
+
+.submit:hover,
+.submit:focus-visible {
+  background: var(--colorFlame);
+}
+
+.submit:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.submit:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.note,
+.line {
+  margin: 5px 0;
+  text-align: center;
+  color: var(--colorInk);
+  font-size: var(--sizeTextSm);
+}
+
+.line {
+  position: relative;
+  color: var(--colorInkSoft);
+}
+
+.line::before,
+.line::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 28%;
+  height: 1px;
+  background: var(--colorLine);
+}
+
+.line::before {
+  left: 0;
+}
+
+.line::after {
+  right: 0;
+}
+
+.hint {
+  margin: 0;
+  text-align: center;
+  color: var(--colorInkSoft);
+  font-size: var(--sizeTextSm);
+}
+
+.social {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  display: flex;
+  width: 100%;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 6px;
+  border: 1px solid var(--colorLine);
+  border-radius: 10px;
+  background: var(--colorPaper);
+  color: var(--colorInk);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color var(--durationFast) var(--easeOut);
+}
+
+.btn:hover,
+.btn:focus-visible {
+  border-color: var(--colorFlame);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.demo {
+  display: grid;
+  gap: 8px;
+  margin-top: 6px;
+  padding: 12px;
+  border: 1px dashed color-mix(in oklch, var(--colorInk) 22%, transparent);
+  border-radius: 12px;
+}
+
+.demoTitle,
+.demoHint {
+  margin: 0;
+  color: var(--colorInkSoft);
+  font-size: var(--sizeTextSm);
+  text-align: center;
+}
+
+.demoButtons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.demoBtn {
+  min-height: 40px;
+  padding: 6px 4px;
+  border: 1px solid color-mix(in oklch, var(--colorInk) 14%, transparent);
+  border-radius: 10px;
+  background: var(--colorPaper);
+  color: var(--colorInk);
+  font: inherit;
+  font-size: var(--sizeTextSm);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.demoBtn:hover,
+.demoBtn:focus-visible {
+  border-color: var(--colorFlame);
+  color: var(--colorFlame);
+}
+
+.demoBtn:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.demoHint code {
+  font-weight: 700;
+  color: var(--colorInk);
+}
