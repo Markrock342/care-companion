@@ -18,6 +18,7 @@ import { canChat, formatBaht, formatDate, formatTime } from "@/lib/format";
 import { provinceName } from "@/lib/provinces";
 import type { EmergencyContact, Offer, Profile, Review, Trip } from "@/lib/types";
 import { TripSafety } from "@/components/trips/trip-safety";
+import { NextStep } from "@/components/trips/next-step";
 import { findConflicts, formatRange } from "@/lib/schedule";
 
 export default async function TripDetailPage({
@@ -115,6 +116,16 @@ export default async function TripDetailPage({
           <div className="mt-2 flex flex-wrap items-start justify-between gap-3">
             <h1 className="font-display text-4xl">{trip.title}</h1>
             <StatusPill value={trip.status} />
+          </div>
+          <div className="mt-4">
+            <NextStep
+              trip={trip}
+              role={profile.role}
+              isCustomer={isCustomer}
+              isCompanion={isCompanion}
+              pendingOffers={offers.filter((offer) => offer.status === "pending" && offer.initiated_by === "companion").length}
+              hasReviewed={Boolean(myReview)}
+            />
           </div>
           <p className="mt-4 max-w-prose text-ink-soft">{trip.details}</p>
           <div className="mt-8 rounded-[28px] bg-ink p-6 text-paper">

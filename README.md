@@ -1,109 +1,163 @@
-# Care Companion — เพื่อนเดินทาง
-
-แพลตฟอร์มจับคู่ **Customer** (ผู้ต้องการเพื่อนเดินทาง) กับ **Companion** (ผู้พาไปทำธุระนอกบ้าน)  
-**ไม่ใช่** บริการทางการแพทย์หรือผู้ดูแลผู้ป่วย
-
-งาน Assignment+Midterm: Next.js + Tailwind + Google Auth ผ่าน Supabase + PostgreSQL + Storage + Deploy Vercel
-
-## สิ่งที่ระบบทำได้
-
-- เข้าสู่ระบบด้วย Google (Customer / Companion / Admin)
-- Customer สร้างคำขอ: ประเภทธุระ, วันเวลา, จุดเริ่ม–จุดหมาย, ค่าตอบแทนที่เสนอ, ปักหมุดแผนที่
-- ค้นหา / เลือก Companion + ระบบแนะคนที่ตรงพื้นที่และเวลา
-- Companion สมัครรับงาน หรือตอบรับคำเชิญ (ต้องถูก Admin อนุมัติก่อน)
-- วงจรงาน: รอจับคู่ → มีเพื่อนแล้ว → กำลังเดินทาง → จบงาน / ยกเลิก
-- แชทหลังจับคู่, ให้คะแนนหลังจบงาน
-- Admin อนุมัติ Companion, ระงับผู้ใช้, ดูคำขอทั้งหมด
-- ภาษาไทย / อังกฤษ สลับได้
-- ค่าตอบแทนระบุในคำขอ **จ่ายกันนอกระบบ** ไม่มี payment gateway
-
-## โฟลเดอร์สำคัญ
+# ⟢ CARE COMPANION ⟣
 
 ```
-app/[locale]/     หน้าเว็บทุกภาษา
-components/       UI ที่ใช้ซ้ำ
-lib/              auth, actions, matching, supabase
-messages/         คำแปล th / en
-supabase/schema.sql   ตาราง + RLS + RPC
+   ╔═══════════════════════════════════════════════════════════════╗
+   ║   ◉  C A R E   C O M P A N I O N                              ║
+   ║      ระบบนำร่องมนุษย์ · HUMAN ESCORT NETWORK · v1.0           ║
+   ║                                                               ║
+   ║   STATUS ▸ ONLINE          GRID ▸ 77 จังหวัด                  ║
+   ║   CORE   ▸ SUPABASE        COPILOT ▸ GEMINI 3.5 FLASH         ║
+   ╚═══════════════════════════════════════════════════════════════╝
 ```
 
-## วิธีเซ็ตให้ใช้งานจริง
+> **ภารกิจ:** ไม่มีใครควรต้องออกไปโรงพยาบาล ธนาคาร หรือที่ว่าการอำเภอคนเดียว
+> เครือข่ายนี้จับคู่ **ผู้ขอ (Customer)** กับ **เพื่อนเดินทาง (Companion)** ที่ไปด้วยกันจนจบธุระ แล้วกลับถึงบ้านอย่างปลอดภัย
+>
+> ⚠️ **โปรโตคอลความปลอดภัย:** นี่ **ไม่ใช่** บริการทางการแพทย์ ไม่ใช่ผู้ดูแลผู้ป่วย เพื่อนเดินทางไปเป็นเพื่อนและอำนวยความสะดวกเท่านั้น
 
-### 1) รันโค้ด
+**🛰 สถานีภาคพื้น:** https://care-companion-nine-navy.vercel.app
+
+---
+
+## ◈ เข้าสู่ระบบด้วยรหัสทดลอง
+
+กดปุ่มเดียวในหน้าล็อกอิน ไม่ต้องพิมพ์ ไม่ต้องสมัคร
+
+| บทบาท | รหัสประจำตัว | รหัสผ่าน |
+| --- | --- | --- |
+| `ADMIN` ผู้ควบคุมระบบ | `admin@demo.test` | `Demo1234!` |
+| `CUSTOMER` ผู้ขอเดินทาง | `customer@demo.test` | `Demo1234!` |
+| `COMPANION` เพื่อนเดินทาง | `companion@demo.test` | `Demo1234!` |
+
+ผู้ใช้จริงเข้าด้วย **Google Account** เท่านั้น
+
+---
+
+## ◈ ระบบย่อยบนยาน
+
+```
+┌─ CORE ─────────────────────────────────────────────────────────┐
+│ ◇ IDENTITY      Google OAuth ผ่าน Supabase Auth + RLS ทุกตาราง │
+│ ◇ MATCHING      แนะเพื่อนเดินทางจากจังหวัด วัน เวลา ค่าตอบแทน  │
+│ ◇ LIFECYCLE     รอจับคู่ → มีเพื่อนแล้ว → เดินทาง → จบงาน       │
+│ ◇ COMMS         แชทเรียลไทม์ + รีวิวสองทางหลังจบงาน            │
+└────────────────────────────────────────────────────────────────┘
+┌─ AI COPILOT (Gemini) ──────────────────────────────────────────┐
+│ ◇ AUTO-FILL     พิมพ์ "พรุ่งนี้ 9 โมงพาแม่ไปศิริราช"            │
+│                 → แยกประเภท วันเวลา สถานที่ ค่าตอบแทน ปักหมุด   │
+│ ◇ TRIP ANALYSIS สรุปงาน เช็กลิสต์ของที่ต้องเตรียม              │
+│                 ประเมินค่าตอบแทน คำเตือน และสิ่งที่ควรตกลงกัน   │
+└────────────────────────────────────────────────────────────────┘
+┌─ SAFETY NET ───────────────────────────────────────────────────┐
+│ ◇ FAMILY LINK   ลิงก์ให้ญาติติดตามสด ไม่ต้องล็อกอิน ปิดเองเมื่อจบ│
+│ ◇ BEACON        แชร์ตำแหน่งระหว่างเดินทาง อัปเดตอัตโนมัติ        │
+│ ◇ SOS           ปุ่มโทรหาญาติ / 1669 / อีกฝ่าย ในหน้าเดียว      │
+│ ◇ CLASH GUARD   ปฏิทินรายสัปดาห์ + เตือนเมื่อรับงานเวลาชนกัน     │
+└────────────────────────────────────────────────────────────────┘
+┌─ CONTROL DECK (Admin) ─────────────────────────────────────────┐
+│ ◇ TELEMETRY     KPI, กราฟ 8 สัปดาห์, ประเภทธุระ, จังหวัดยอดนิยม │
+│ ◇ GATEKEEPING   อนุมัติ/ไม่อนุมัติเพื่อนเดินทาง พร้อมเหตุผล      │
+│ ◇ COMMAND       ค้นหา กรอง เปลี่ยนบทบาท ระงับบัญชี ยกเลิกคำขอ   │
+│ ◇ BLACK BOX     บันทึกทุกคำสั่งของแอดมิน ย้อนหลังได้            │
+└────────────────────────────────────────────────────────────────┘
+```
+
+พร้อมภาษาไทย/อังกฤษ โหมดมืด–สว่าง และหน้าจอที่ใช้งานได้ตั้งแต่มือถือจอเล็กถึงจอคอม
+
+---
+
+## ◈ แผงวงจร
+
+| ชั้น | เทคโนโลยี |
+| --- | --- |
+| Frontend | Next.js 16 (App Router, Server Components) · Tailwind v4 · next-intl |
+| Backend | Supabase — PostgreSQL + Row Level Security + RPC + Realtime |
+| Auth | Google OAuth ผ่าน Supabase Auth |
+| Storage | Supabase Storage (รูปโปรไฟล์) |
+| AI | Gemini API (`gemini-3.5-flash`) แบบ structured JSON |
+| Maps | Google Maps JS API เมื่อใส่คีย์ ไม่งั้นใช้ OpenStreetMap |
+| Deploy | Vercel (ภูมิภาคสิงคโปร์ ใกล้ฐานข้อมูล) |
+
+---
+
+## ◈ ลำดับการปล่อยยาน
+
+### 1 · โคลนและติดตั้ง
 
 ```bash
+git clone https://github.com/Markrock342/care-companion.git
 cd care-companion
-cp .env.example .env.local
 npm install
-npm run dev
+cp .env.example .env.local
 ```
 
-เปิด [http://localhost:3000](http://localhost:3000) จะไป `/th`
+### 2 · ฐานข้อมูล
 
-### 2) สร้างโปรเจกต์ Supabase
+ใน **Supabase → SQL Editor** รันตามลำดับ:
 
-1. สมัคร [supabase.com](https://supabase.com) แล้ว New project
-2. **Project Settings → API** คัดลอก
-   - Project URL → `NEXT_PUBLIC_SUPABASE_URL`
-   - anon public → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-3. **SQL Editor** วางทั้งไฟล์ `supabase/schema.sql` แล้ว Run
-4. **Authentication → Providers → Google** เปิดใช้
-   - สร้าง OAuth Client ที่ [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
-   - Authorized redirect URI ของ Google:
-     `https://<PROJECT_REF>.supabase.co/auth/v1/callback`
-   - ใส่ Client ID / Secret ใน Supabase
-5. **Authentication → URL Configuration**
-   - Site URL: `http://localhost:3000` (ตอน dev) แล้วเปลี่ยนเป็นโดเมน Vercel
-   - Redirect URLs เพิ่ม:
-     - `http://localhost:3000/th/auth/callback`
-     - `http://localhost:3000/en/auth/callback`
-     - `https://YOUR-APP.vercel.app/th/auth/callback`
-     - `https://YOUR-APP.vercel.app/en/auth/callback`
-6. **Storage** ถ้ายังไม่มี bucket `avatars` ไฟล์ SQL สร้างให้แล้ว
+| ลำดับ | ไฟล์ | หน้าที่ |
+| --- | --- | --- |
+| 1 | `supabase/schema.sql` | ตาราง, RLS, RPC, Storage bucket |
+| 2 | `supabase/migrations/002_trip_safety.sql` | ลิงก์ญาติ, ตำแหน่ง, ผู้ติดต่อฉุกเฉิน |
+| 3 | `supabase/migrations/003_admin_console.sql` | สถิติแอดมิน + บันทึกการดำเนินการ |
+| 4 | `supabase/seed-demo.sql` | บัญชีและข้อมูลตัวอย่าง (ไม่บังคับ) |
 
-### 3) ตั้ง Admin
+รูปโปรไฟล์ตัวอย่าง: `node --env-file=.env.local scripts/seed-demo-avatars.mjs`
 
-ล็อกอินด้วย Google หนึ่งครั้ง แล้วรันใน SQL Editor:
-
-```sql
-update public.profiles
-set role = 'admin', verification_status = 'not_required'
-where id = (select id from auth.users where email = 'you@gmail.com');
-```
-
-ใช้ Gmail จริงที่ล็อกอิน
-
-### 4) ทดสอบครบ 3 บทบาท
-
-ต้องมีอย่างน้อย 2 Google account
-
-1. บัญชี A → เลือก **เพื่อนเดินทาง** → Admin อนุมัติ
-2. บัญชี B → เลือก **ผู้ต้องการเพื่อนเดินทาง** → สร้างคำขอ → เชิญหรือรอสมัคร
-3. บัญชี A ตอบรับ → แชท → เริ่มเดินทาง → จบงาน → ให้คะแนน
-4. บัญชี Admin ดูภาพรวม
-
-### 5) GitHub + Vercel
+### 3 · กุญแจ
 
 ```bash
-cd care-companion
-git add .
-git commit -m "Care Companion web app"
-# สร้าง repo บน GitHub แล้ว push
-
-# Vercel: Import repo, ใส่ Environment Variables ชุดเดียวกับ .env.local
-# NEXT_PUBLIC_SITE_URL=https://YOUR-APP.vercel.app
+NEXT_PUBLIC_SUPABASE_URL=https://<project>.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<publishable key>
+GEMINI_API_KEY=<key จาก aistudio.google.com/apikey>
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=            # ไม่ใส่ก็ได้ จะใช้ OpenStreetMap แทน
 ```
 
-หลัง deploy กลับไปอัปเดต Site URL / Redirect URLs ใน Supabase ให้ตรงโดเมนจริง
+### 4 · เปิด Google OAuth
 
-## สคริปต์พรีเซนต์
+1. [Google Cloud Console](https://console.cloud.google.com/apis/credentials) → สร้าง OAuth Client (Web)
+   Authorized redirect URI: `https://<project>.supabase.co/auth/v1/callback`
+2. Supabase → **Authentication → Providers → Google** ใส่ Client ID / Secret
+3. Supabase → **URL Configuration** เพิ่ม `<โดเมน>/th/auth/callback` และ `/en/auth/callback`
 
-ดู `docs/PRESENTATION.md`
+### 5 · จุดเครื่อง
 
-## เทค
+```bash
+npm run dev        # http://localhost:3000 → /th
+npm run build      # ตรวจก่อนขึ้นจริง
+```
 
-- Next.js 16 (App Router) + Tailwind CSS 4
-- next-intl (th / en)
-- Supabase Auth (Google) + PostgreSQL + RLS + Storage + Realtime
-- Leaflet + OpenStreetMap (ไม่มี Google Maps API)
-- Phosphor icons
+---
+
+## ◈ ผังห้องเครื่อง
+
+```
+app/[locale]/        หน้าเว็บทุกภาษา (admin, customer, companion, trips, share)
+components/          UI ที่ใช้ซ้ำ — landing, trips, admin, map, ui
+lib/                 auth, actions (server), matching, schedule, ai, supabase
+messages/            คำแปล th / en
+supabase/            schema.sql, migrations/, seed-demo.sql
+scripts/             เครื่องมือเสริม
+docs/PRESENTATION.md สคริปต์เดโม
+```
+
+---
+
+## ◈ กฎของเครือข่าย
+
+- ค่าตอบแทนตกลงกันเอง **จ่ายนอกระบบ** ไม่มี payment gateway
+- เพื่อนเดินทางต้องผ่านการอนุมัติจากแอดมินก่อนรับงาน
+- แชทเปิดหลังจับคู่ รีวิวได้หลังจบงานเท่านั้น
+- เบอร์ผู้ติดต่อฉุกเฉินเห็นได้เฉพาะคู่เดินทางของงานที่ยังไม่จบ
+- ลิงก์ญาติเปิดได้โดยไม่ต้องล็อกอิน และหมดอายุเองเมื่อจบงาน
+- ทุกตารางบังคับด้วย Row Level Security — สิทธิ์ตัดสินที่ฐานข้อมูล ไม่ใช่ที่หน้าเว็บ
+
+---
+
+<div align="center">
+
+**เดินทางด้วยกัน ไม่ต้องไปคนเดียว**
+
+`END OF TRANSMISSION ▸ ◉`
+
+</div>

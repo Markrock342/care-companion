@@ -122,3 +122,46 @@ export type TripWithPeople = Trip & {
   customer?: Pick<Profile, "id" | "full_name" | "avatar_url" | "phone"> | null;
   companion?: Pick<Profile, "id" | "full_name" | "avatar_url" | "phone"> | null;
 };
+
+export type AdminStats = {
+  users: {
+    total: number;
+    customers: number;
+    companions: number;
+    admins: number;
+    suspended: number;
+    pending_companions: number;
+    new_7d: number;
+  };
+  trips: {
+    total: number;
+    open: number;
+    matched: number;
+    in_progress: number;
+    completed: number;
+    cancelled: number;
+    new_7d: number;
+    compensation_completed: number;
+    avg_compensation: number;
+  };
+  reviews: { total: number; avg_rating: number; low_ratings: number };
+  weekly: { week_start: string; created: number; completed: number }[];
+  categories: { category: TripCategory; total: number }[];
+  provinces: { province: string; total: number }[];
+};
+
+export type AdminAction = {
+  id: string;
+  admin_id: string;
+  action:
+    | "approve_companion"
+    | "reject_companion"
+    | "suspend_user"
+    | "restore_user"
+    | "change_role"
+    | "cancel_trip";
+  target_user: string | null;
+  target_trip: string | null;
+  note: string;
+  created_at: string;
+};
